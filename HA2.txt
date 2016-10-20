@@ -3,56 +3,54 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 
-//Signal Handler. Change
-int cs531_system(char *s);
+int cs531_system(char *command);
 
+//Signal Handler
 void sig_handler(int signum)
 {
   if (signum == SIGINT)
    printf("\nreceived SIGINT\n");
 }
 
-int main(int argc,int char *argv[])
+int main(int argc,char *argv[])
 {
     int status;
     status = cs531_system(argv[1]);
     return status;
 }
 
-int cs531_system(char *s)
+int cs531_system(char *command)
 {
     int status=0;
-    pid_t childid;
-	pid_t cid;
-	
-    //signal function to bind signalhandler.
+    pid_t child_id;
+	pid_t c_id;
+	    
+    child_id = fork();
     
-    childid = fork();
-    
-    
-    if(childid == (pid_t)0){
-        //child logic
-		
+    //child logic
+    if(child_id == (pid_t)0){
 		execlp("/bin/sh", "sh", "-c", command, (char *) NULL);
         
-        // If program reaches this statement it means that execlp has failed.
-        
+        //If program reaches this statement it means that execlp has failed.
         printf("Command execution failed\n");
     }
     else{
-        if(childid < (pid_t)0)
+        if(child_id < (pid_t)0)
         {
             fprintf(stderr,"Fork failed.\n");
 			exit(EXIT_FAILURE);
         }
 		else
 		{
+			//signal function to bind signalhandler.
 			if (signal(SIGINT, sig_handler) == SIG_ERR)
 				printf("\ncan't catch SIGINT\n");
-			cid = wait(&status); /*Wait for child to complete.*/
-			printf("Parent:Child %ld exited with status = %d\n",(long)cid,status);
+			
+			c_id = wait(&status); /*Wait for child to complete.*/
+			printf("Parent:Child %ld exited with status = %d\n",(long)c_id,status);
 		}
         
         
