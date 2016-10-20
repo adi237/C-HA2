@@ -34,6 +34,12 @@ int cs531_system(char *s)
     
     if(childid == (pid_t)0){
         //child logic
+		
+		execlp("/bin/sh", "sh", "-c", command, (char *) NULL);
+        
+        // If program reaches this statement it means that execlp has failed.
+        
+        printf("Command execution failed\n");
     }
     else{
         if(childid < (pid_t)0)
