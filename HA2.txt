@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-//Signal Handler.
+//Signal Handler. Change
 int cs531_system(char *s);
 
 int main(int argc,int char *argv[])
