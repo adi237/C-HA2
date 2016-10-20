@@ -8,6 +8,12 @@
 //Signal Handler. Change
 int cs531_system(char *s);
 
+void sig_handler(int signum)
+{
+  if (signum == SIGINT)
+   printf("\nreceived SIGINT\n");
+}
+
 int main(int argc,int char *argv[])
 {
     int status;
@@ -37,6 +43,8 @@ int cs531_system(char *s)
         }
 		else
 		{
+			if (signal(SIGINT, sig_handler) == SIG_ERR)
+				printf("\ncan't catch SIGINT\n");
 			cid = wait(&status); /*Wait for child to complete.*/
 			printf("Parent:Child %ld exited with status = %d\n",(long)cid,status);
 		}
