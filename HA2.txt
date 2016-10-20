@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+//Signal Handler.
+int cs531_system(char *s);
+
+int main(int argc,int char *argv[])
+{
+    int status;
+    status = cs531_system(argv[1]);
+    return status;
+}
+
+int cs531_system(char *s)
+{
+    int status=0;
+    pid_t childid;
+	pid_t cid;
+	
+    //signal function to bind signalhandler.
+    
+    childid = fork();
+    
+    
+    if(childid == (pid_t)0){
+        //child logic
+    }
+    else{
+        if(childid < (pid_t)0)
+        {
+            fprintf(stderr,"Fork failed.\n");
+			exit(EXIT_FAILURE);
+        }
+		else
+		{
+			cid = wait(&status); /*Wait for child to complete.*/
+			printf("Parent:Child %ld exited with status = %d\n",(long)cid,status);
+		}
+        
+        
+    }
+    return status;
+}
