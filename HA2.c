@@ -8,15 +8,15 @@
 
 int cs531_system(char *command);
 
-//Signal Handler
-/*
-*
-* @param
+
+/*This is the Signal Handler function which has been registered with the Kernel
+* Used in the child process to handle the 'SIGINT' signal
+* @param signal-number
 */
-void sig_handler(int signum)
+void signal_handler(int signum)
 {
   if (signum == SIGINT)
-   printf("\nreceived SIGINT\n");
+   printf("\nReceived signal'SIGINT'\n");
 }
 
 /*
@@ -65,8 +65,8 @@ int cs531_system(char *command)
 		else
 		{
 			//signal function to bind signalhandler.
-			if (signal(SIGINT, sig_handler) == SIG_ERR)
-				printf("\ncan't catch SIGINT\n");
+			if (signal(SIGINT, signal_handler) == SIG_ERR)
+				printf("\nCannot Handle Signal 'SIGINT'\n");
 			
 			c_id = wait(&status); /*Wait for child to complete.*/
 			printf("Parent: Child %ld exited with status = %d\n",(long)c_id,status);
