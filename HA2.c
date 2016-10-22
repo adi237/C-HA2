@@ -8,20 +8,19 @@
 
 int cs531_system(char *command);
 
-
 /*This is the Signal Handler function which has been registered with the Kernel
 * Used in the child process to handle the 'SIGINT' signal
 * @param signal-number
 */
 void signal_handler(int signum)
 {
-  if (signum == SIGINT)
-   printf("\nReceived signal'SIGINT'\n");
+	if (signum == SIGINT)
+   	printf("\nReceived signal'SIGINT'\n");
 }
 
 /*
 *
-* @param
+* @param argument count, argument vector
 */
 int main(int argc,char *argv[])
 {
@@ -30,9 +29,9 @@ int main(int argc,char *argv[])
 		fprintf(stderr,"Please provide a command.\n");
 		exit(EXIT_FAILURE);
 	}
-    int status;
-    status = cs531_system(argv[1]);
-    return status;
+    	int status;
+    	status = cs531_system(argv[1]);
+    	return status;
 }
 
 /*
@@ -43,36 +42,36 @@ int main(int argc,char *argv[])
 */
 int cs531_system(char *command)
 {
-    int status=0;
-    pid_t child_id;
+    	int status=0;
+    	pid_t child_id;
 	pid_t c_id;
 	    
-    child_id = fork();
+    	child_id = fork();
     
-    //child logic
-    if(child_id == (pid_t)0){
+    	//child logic
+    	if(child_id == (pid_t)0)
+	{
 		execlp("/bin/sh", "sh", "-c", command, (char *) NULL);
         
-        //If program reaches this statement it means that execlp has failed.
-        printf("Command execution failed\n");
-    }
-    else{
-        if(child_id < (pid_t)0)
-        {
-            fprintf(stderr,"Fork failed.\n");
+        	//If program reaches this statement it means that execlp has failed.
+        	fprintf(stderr,"Command execution failed\n");
+    	}
+    	else
+	{
+        	if(child_id < (pid_t)0)
+        	{
+            		fprintf(stderr,"Fork failed.\n");
 			exit(EXIT_FAILURE);
-        }
+        	}
 		else
 		{
-			//signal function to bind signalhandler.
+			//signal function to bind signal handler.
 			if (signal(SIGINT, signal_handler) == SIG_ERR)
-				printf("\nCannot Handle Signal 'SIGINT'\n");
+			fprintf(stderr,"\nCannot Handle Signal 'SIGINT'\n");
 			
 			c_id = wait(&status); /*Wait for child to complete.*/
 			printf("Parent: Child %ld exited with status = %d\n",(long)c_id,status);
 		}
-        
-        
-    }
-    return status;
+    	}
+    	return status;
 }
